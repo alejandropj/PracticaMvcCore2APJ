@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using PracticaMvcCore2APJ.Filters;
 using PracticaMvcCore2APJ.Models;
 using PracticaMvcCore2APJ.Repositories;
 
@@ -74,6 +75,7 @@ namespace PracticaMvcCore2APJ.Controllers
             return View();
         }
 
+        [AuthorizeUsuarios]
         public async Task<IActionResult> ComprarLibros()
         {
             List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
@@ -87,6 +89,7 @@ namespace PracticaMvcCore2APJ.Controllers
             }
                 return View();
         }
+        [AuthorizeUsuarios]
         public async Task<IActionResult> VistaPedidos()
         {
             int idUser = int.Parse(HttpContext.User.FindFirst("Id").Value);

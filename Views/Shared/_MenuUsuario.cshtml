@@ -1,4 +1,29 @@
-﻿@if(Context.User.Identity.IsAuthenticated==false){
+﻿@{
+    List<Libro> carrito = memoryCache.Get<List<Libro>>("CARRITO");
+}
+
+@if (carrito != null)
+{
+    <li class="nav-item">
+        <a asp-controller="Libros"
+           asp-action="CarritoLibros"
+           class="nav-link">
+            Carrito <span class="badge bg-warning"> @carrito.Count</span>
+        </a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a asp-controller="Libros"
+           asp-action="CarritoLibros"
+           class="nav-link">
+            Carrito <span class="badge bg-warning">0</span>
+        </a>
+    </li>
+}
+
+@if(Context.User.Identity.IsAuthenticated==false){
     <li class="nav-item">
         <a asp-controller="Usuarios"
         asp-action="PerfilPersonal"
@@ -16,13 +41,6 @@ else
             Tu Perfil <span class="text-primary">@Context.User.Identity.Name</span>
         </a>
     </li>    
-    <li class="nav-item">
-        <a asp-controller="Usuarios"
-           asp-action="PerfilPersonal"
-           class="nav-link">
-            Carrito
-        </a>
-    </li>
     <li class="nav-item">
         <a asp-controller="Managed"
            asp-action="Logout"

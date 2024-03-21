@@ -65,5 +65,10 @@ namespace PracticaMvcCore2APJ.Controllers
         {
             return View();
         }
+
+        public IActionResult PerfilPersonal()
+        {
+            return View();
+        }
     }
 }
