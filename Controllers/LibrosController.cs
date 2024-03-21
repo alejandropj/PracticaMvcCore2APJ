@@ -76,6 +76,10 @@ namespace PracticaMvcCore2APJ.Controllers
                 int suma = carrito.Sum(x => x.Precio);
                 HttpContext.Session.SetString("TOTAL", suma.ToString());
             }
+            else
+            {
+                HttpContext.Session.SetString("TOTAL", "0");
+            }
             return View();
         }
 
