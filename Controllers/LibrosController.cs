@@ -52,7 +52,46 @@ namespace PracticaMvcCore2APJ.Controllers
                 List<Libro> libros = 
                     this.memoryCache.Get<List<Libro>>("CARRITO");
                 Libro libro = libros.Find(z => z.IdLibro == idEliminar.Value);
+
+                libros.Remove(libro);
+
+                if (libros.Count == 0)
+                {
+                    this.memoryCache.Remove("CARRITO");
+                    this.memoryCache.Remove("TOTAL");
+                }
+                else
+                {
+                    this.memoryCache.Set("CARRITO", libros);
+                }
             }
+            List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
+            if(carrito != null)
+            {
+                int suma = carrito.Sum(x => x.Precio);
+                this.memoryCache.Set("TOTAL", suma);
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> ComprarLibros()
+        {
+            List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
+            if (carrito != null)
+            {
+                return RedirectToAction("VistaPedidos");
+            }
+            else
+            {
+                ViewData["MENSAJE"] = "No puedes comprar nada";
+            }
+                return View();
+        }
+        public async Task<IActionResult> VistaPedidos()
+        {
+            int idUser = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            List<VistaPedido> vistaPedidos = await this.repo.GetVistaPedidoAsync(idUser);
+            return View(vistaPedidos);
         }
     }
 }

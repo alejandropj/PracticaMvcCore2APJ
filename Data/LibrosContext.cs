@@ -11,5 +11,6 @@ namespace PracticaMvcCore2APJ.Data
         public DbSet<Genero> Generos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<VistaPedido> VistaPedidos { get; set; }
     }
 }

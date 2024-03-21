@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PracticaMvcCore2APJ.Data;
 using PracticaMvcCore2APJ.Models;
 
@@ -40,6 +41,29 @@ namespace PracticaMvcCore2APJ.Repositories
             Usuario usuario = await this.context.Usuarios.FirstOrDefaultAsync
                 (x => x.Email == email && x.Password == password);
             return usuario;
+        }
+
+        public async Task RealizarCompra(List<Libro> libros, int idUsuario)
+        {
+            int maxPedido = this.context.Pedidos.Max(x => x.IdPedido);
+            int maxFactura = this.context.Pedidos.Max(x => x.IdFactura) + 1;
+            foreach(Libro libro in libros)
+            {
+                Pedido pedido = new Pedido
+                {
+                    IdPedido = maxPedido,
+                    IdFactura=maxFactura,
+                    Fecha= DateTime.Now,
+                    IdLibro=libro.IdLibro,
+                    Cantidad = 1
+                };
+                maxPedido++;
+            }
+        }
+        public async Task<List<VistaPedido>> GetVistaPedidoAsync(int idUsuario)
+        {
+            List<VistaPedido> vistaPedidos = await this.context.VistaPedidos.Where(x => idUsuario == idUsuario).ToListAsync();
+            return vistaPedidos;
         }
     }
 }
