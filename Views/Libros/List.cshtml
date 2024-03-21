@@ -64,7 +64,8 @@
                 @Html.DisplayFor(modelItem => item.IdGenero)
             </td>
             <td>
-                @Html.ActionLink("Detalles", "Details", new {  idLibro=item.IdLibro  })
+                <a class="btn btn-info" asp-action="Details" asp-route-idLibro="@item.IdLibro">Detalles</a>
+                <a class="btn btn-warning" asp-action="List" asp-route-idCarrito="@item.IdLibro">Añadir al carrito</a>
             </td>
         </tr>
 }

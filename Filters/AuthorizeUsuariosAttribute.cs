@@ -25,7 +25,7 @@ namespace PracticaMvcCore2APJ.Filters
             }
             else
             {
-                context.Result = this.GetRoute("Managed", "ErrorAcceso");
+                //context.Result = this.GetRoute("Managed", "ErrorAcceso");
             }
 
         }

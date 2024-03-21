@@ -76,11 +76,15 @@ namespace PracticaMvcCore2APJ.Controllers
         }
 
         [AuthorizeUsuarios]
-        public async Task<IActionResult> ComprarLibros()
+        public async Task<IActionResult> Comprar()
         {
             List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
             if (carrito != null)
             {
+                int idUser = int.Parse(HttpContext.User.FindFirst("Id").Value);
+                await this.repo.RealizarCompra(carrito, idUser);
+                this.memoryCache.Remove("CARRITO");
+                this.memoryCache.Remove("TOTAL");
                 return RedirectToAction("VistaPedidos");
             }
             else

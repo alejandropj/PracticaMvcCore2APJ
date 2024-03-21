@@ -45,7 +45,7 @@ namespace PracticaMvcCore2APJ.Repositories
 
         public async Task RealizarCompra(List<Libro> libros, int idUsuario)
         {
-            int maxPedido = this.context.Pedidos.Max(x => x.IdPedido);
+            int maxPedido = this.context.Pedidos.Max(x => x.IdPedido)+1;
             int maxFactura = this.context.Pedidos.Max(x => x.IdFactura) + 1;
             foreach(Libro libro in libros)
             {
@@ -55,14 +55,17 @@ namespace PracticaMvcCore2APJ.Repositories
                     IdFactura=maxFactura,
                     Fecha= DateTime.Now,
                     IdLibro=libro.IdLibro,
+                    IdUsuario = idUsuario,
                     Cantidad = 1
                 };
                 maxPedido++;
+                this.context.Pedidos.Add(pedido);
             }
+            await this.context.SaveChangesAsync();
         }
         public async Task<List<VistaPedido>> GetVistaPedidoAsync(int idUsuario)
         {
-            List<VistaPedido> vistaPedidos = await this.context.VistaPedidos.Where(x => idUsuario == idUsuario).ToListAsync();
+            List<VistaPedido> vistaPedidos = await this.context.VistaPedidos.Where(x => x.IdUsuario == idUsuario).ToListAsync();
             return vistaPedidos;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using PracticaMvcCore2APJ.Filters;
 using PracticaMvcCore2APJ.Models;
 using PracticaMvcCore2APJ.Repositories;
 using System.Security.Claims;
@@ -32,7 +33,9 @@ namespace PracticaMvcCore2APJ.Controllers
                 Claim claimName = new Claim(ClaimTypes.Name, usuario.Nombre);
                 identity.AddClaim(claimName);
                 Claim claimId = new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString());
-                identity.AddClaim(claimId);
+                identity.AddClaim(claimId);                
+                Claim claimIdUser = new Claim("Id", usuario.IdUsuario.ToString());
+                identity.AddClaim(claimIdUser);
                 Claim claimApellidos = new Claim(ClaimTypes.Role, usuario.Apellidos);
                 identity.AddClaim(claimApellidos);
                 Claim claimEmail = new Claim("Email", usuario.Email);
@@ -65,10 +68,12 @@ namespace PracticaMvcCore2APJ.Controllers
         {
             return View();
         }
-
-        public IActionResult PerfilPersonal()
+        [AuthorizeUsuarios]
+        public async Task<IActionResult> PerfilPersonal()
         {
-            return View();
+            int idUser = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            Usuario user = await this.repo.FindUsuarioAsync(idUser);
+            return View(user);
         }
     }
 }

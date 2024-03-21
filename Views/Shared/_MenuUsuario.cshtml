@@ -25,7 +25,7 @@ else
 
 @if(Context.User.Identity.IsAuthenticated==false){
     <li class="nav-item">
-        <a asp-controller="Usuarios"
+        <a asp-controller="Managed"
         asp-action="PerfilPersonal"
         class="nav-link">
             Log In
@@ -35,7 +35,7 @@ else
 else
 {
     <li class="nav-item">
-        <a asp-controller="Usuarios"
+        <a asp-controller="Managed"
            asp-action="PerfilPersonal"
            class="nav-link">
             Tu Perfil <span class="text-primary">@Context.User.Identity.Name</span>

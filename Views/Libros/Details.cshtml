@@ -61,6 +61,7 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Añadir al carrito", "List", new { idCarrito = Model.IdLibro }) |
+    <a class="btn btn-warning" asp-action="List" asp-route-idCarrito="@Model.IdLibro">Añadir al carrito</a>
+    <br />
     <a asp-action="List">Volver</a>
 </div>
