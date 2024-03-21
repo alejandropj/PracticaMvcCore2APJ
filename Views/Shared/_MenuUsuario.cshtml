@@ -1,5 +1,5 @@
 ﻿@{
-    List<Libro> carrito = memoryCache.Get<List<Libro>>("CARRITO");
+    List<Libro> carrito = Context.Session.GetObject<List<Libro>>("CARRITO");
 }
 
 @if (carrito != null)

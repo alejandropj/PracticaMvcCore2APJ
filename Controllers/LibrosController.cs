@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using PracticaMvcCore2APJ.Extensions;
 using PracticaMvcCore2APJ.Filters;
 using PracticaMvcCore2APJ.Models;
 using PracticaMvcCore2APJ.Repositories;
+using System.Net.Http;
 
 namespace PracticaMvcCore2APJ.Controllers
 {
@@ -13,6 +16,7 @@ namespace PracticaMvcCore2APJ.Controllers
         public LibrosController(RepositoryLibros repo, IMemoryCache memoryCache)
         {
             this.repo = repo;
+            this.repo = repo;
             this.memoryCache = memoryCache;
         }
         public async Task<IActionResult> List(int? idCarrito)
@@ -20,17 +24,17 @@ namespace PracticaMvcCore2APJ.Controllers
             if (idCarrito != null)
             {
                 List<Libro> librosCarrito;
-                if(this.memoryCache.Get("CARRITO") == null)
+                if(HttpContext.Session.GetObject<List<Libro>>("CARRITO") == null)
                 {
                     librosCarrito = new List<Libro>();
                 }
                 else
                 {
-                    librosCarrito = this.memoryCache.Get<List<Libro>>("CARRITO");
+                    librosCarrito = HttpContext.Session.GetObject<List<Libro>>("CARRITO");
                 }
                 Libro libro = await this.repo.FindLibroById(idCarrito.Value);
                 librosCarrito.Add(libro);
-                this.memoryCache.Set("CARRITO", librosCarrito);
+                HttpContext.Session.SetObject("CARRITO", librosCarrito);
             }
             List<Libro> libros = await this.repo.GetLibrosAsync();
             return View(libros);
@@ -50,27 +54,27 @@ namespace PracticaMvcCore2APJ.Controllers
         {
             if (idEliminar != null)
             {
-                List<Libro> libros = 
-                    this.memoryCache.Get<List<Libro>>("CARRITO");
+                List<Libro> libros =
+                    HttpContext.Session.GetObject<List<Libro>>("CARRITO");
                 Libro libro = libros.Find(z => z.IdLibro == idEliminar.Value);
 
                 libros.Remove(libro);
 
                 if (libros.Count == 0)
                 {
-                    this.memoryCache.Remove("CARRITO");
-                    this.memoryCache.Remove("TOTAL");
+                    HttpContext.Session.Remove("CARRITO");
+                    HttpContext.Session.SetString("TOTAL","0");
                 }
                 else
                 {
-                    this.memoryCache.Set("CARRITO", libros);
+                    HttpContext.Session.SetObject("CARRITO", libros);
                 }
             }
-            List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
+            List<Libro> carrito = HttpContext.Session.GetObject<List<Libro>>("CARRITO");
             if(carrito != null)
             {
                 int suma = carrito.Sum(x => x.Precio);
-                this.memoryCache.Set("TOTAL", suma);
+                HttpContext.Session.SetString("TOTAL", suma.ToString());
             }
             return View();
         }
@@ -78,13 +82,13 @@ namespace PracticaMvcCore2APJ.Controllers
         [AuthorizeUsuarios]
         public async Task<IActionResult> Comprar()
         {
-            List<Libro> carrito = this.memoryCache.Get<List<Libro>>("CARRITO");
+            List<Libro> carrito = HttpContext.Session.GetObject<List<Libro>>("CARRITO");
             if (carrito != null)
             {
                 int idUser = int.Parse(HttpContext.User.FindFirst("Id").Value);
                 await this.repo.RealizarCompra(carrito, idUser);
-                this.memoryCache.Remove("CARRITO");
-                this.memoryCache.Remove("TOTAL");
+                HttpContext.Session.Remove("CARRITO");
+                HttpContext.Session.Remove("TOTAL");
                 return RedirectToAction("VistaPedidos");
             }
             else

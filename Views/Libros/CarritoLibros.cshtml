@@ -1,6 +1,6 @@
 ﻿@{
-    List<Libro> carrito = memoryCache.Get<List<Libro>>("CARRITO");
-    int total = memoryCache.Get<int>("TOTAL");
+    List<Libro> carrito = Context.Session.GetObject<List<Libro>>("CARRITO");
+    int total = int.Parse(Context.Session.GetString("TOTAL"));
 }
 
 <h1>Lista del Carrito</h1>

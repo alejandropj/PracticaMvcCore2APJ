@@ -40,6 +40,7 @@ builder.Services.AddControllersWithViews(
 string connectionString = builder.Configuration.GetConnectionString("SqlLibros");
  
 builder.Services.AddTransient<RepositoryLibros>();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<LibrosContext>
     (options => options.UseSqlServer(connectionString));
@@ -62,6 +63,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
+
 app.UseMvc(routes =>
 {
     routes.MapRoute(
