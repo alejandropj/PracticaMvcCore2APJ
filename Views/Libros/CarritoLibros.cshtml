@@ -1,0 +1,43 @@
+﻿@{
+    List<Libro> carrito = memoryCache.Get<List<Libro>>("CARRITO");
+    int total = memoryCache.Get<int>("TOTAL");
+}
+
+<h1>Lista del Carrito</h1>
+
+@if (carrito == null)
+{
+    <h2 class="text-danger">No tienes nada en el carrito</h2>
+}
+else
+{
+<table class="table table-bordered table-danger">
+    <thead>
+        <tr>
+            <th>IdLibro</th>
+            <th>Titulo</th>
+            <th>Autor</th>
+            <th>Editorial</th>
+            <th>Portada</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Libro libro in carrito){
+            <tr>
+                <td>@libro.IdLibro</td>
+                <td>@libro.Titulo</td>
+                <td>@libro.Autor</td>
+                <td>@libro.Editorial</td>
+                <td><img src="~/images/@libro.Portada" style="width:150px;"/></td>
+                <td>@libro.Precio</td>
+                <td><a asp-action="CarritoLibros" asp-route-idEliminar="@libro.IdLibro">Eliminar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h1>Total: @total</h1>
+<a asp-action="Comprar">Realizar compra</a>
+}

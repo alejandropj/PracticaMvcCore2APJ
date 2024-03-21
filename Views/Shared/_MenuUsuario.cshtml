@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@if(Context.User.Identity.IsAuthenticated==false){
+    <li class="nav-item">
+        <a asp-controller="Usuarios"
+        asp-action="PerfilPersonal"
+        class="nav-link">
+            Log In
+        </a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a asp-controller="Usuarios"
+           asp-action="PerfilPersonal"
+           class="nav-link">
+            Tu Perfil <span class="text-primary">@Context.User.Identity.Name</span>
+        </a>
+    </li>    
+    <li class="nav-item">
+        <a asp-controller="Usuarios"
+           asp-action="PerfilPersonal"
+           class="nav-link">
+            Carrito
+        </a>
+    </li>
+    <li class="nav-item">
+        <a asp-controller="Managed"
+           asp-action="Logout"
+           class="nav-link text-danger">
+            Log Out
+        </a>
+    </li>
 }
