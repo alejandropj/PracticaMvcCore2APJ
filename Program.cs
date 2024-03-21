@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using PracticaMvcCore2APJ.Data;
+using PracticaMvcCore2APJ.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +39,9 @@ builder.Services.AddControllersWithViews(
 
 string connectionString = builder.Configuration.GetConnectionString("SqlLibros");
  
-builder.Services.AddTransient<IRepositoryEmpleados,RepositoryEmpleadosSql>();
+builder.Services.AddTransient<RepositoryLibros>();
 
-builder.Services.AddDbContext<HospitalContext>
+builder.Services.AddDbContext<LibrosContext>
     (options => options.UseSqlServer(connectionString));
 var app = builder.Build();
 
